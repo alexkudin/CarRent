@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TableLayout
+        android:layout_column="2"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+
+        <TableRow>
+            <TextView
+                android:text="Car Name : "
+                android:textSize="8pt"
+                android:layout_column="0"/>
+            <EditText
+                android:text="Renault"
+                android:textSize="8pt"
+                android:layout_column="1"
+                android:id="@+id/etName"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:text="Car Model : "
+                android:textSize="8pt"
+                android:layout_column="0"/>
+            <EditText
+                android:text="Megane"
+                android:textSize="8pt"
+                android:layout_column="1"
+                android:id="@+id/etModel"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:text="Car Year : "
+                android:textSize="8pt"
+                android:layout_column="0"/>
+            <EditText
+                android:text="2007"
+                android:textSize="8pt"
+                android:layout_column="1"
+                android:id="@+id/etYear"/>
+        </TableRow>
+
+    </TableLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/CarImg"
+        android:orientation="vertical">
+    </ImageView>
+</LinearLayout>

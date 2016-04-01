@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,10 +44,6 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity
 {
     private ListView        ListOfCars;
-    private EditText        editName;
-    private EditText        editModel;
-    private EditText        editYear;
-    private ImageView       FotoView;
     private LayoutInflater  inflater;
     private EditText        dialogCarName;
     private EditText        dialogCarModel;
@@ -54,7 +51,8 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout    dialogPictureView;
     public static ArrayList<View> allViews = new ArrayList<>();
     public static int currentCar = -1;
-
+    private static View curView    = null;
+    private static Car tmpCar;
 
     private View dialogViewAddUpd;              // ----------- dialog Add -----------------------
     private AlertDialog.Builder biulder;        // ------- builder for Add && Update ------------
@@ -62,8 +60,7 @@ public class MainActivity extends AppCompatActivity
     private static boolean isUpdate = false;
     private static boolean isMainLayout = true;
 
-
-    private static File PicDir                      = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);	// directory Pictures on Device
+    private static File PicDir                       = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);	// directory Pictures on Device
     private static File []      files                = PicDir.listFiles();
     private static String[]     fileNames ;
 
@@ -81,14 +78,8 @@ public class MainActivity extends AppCompatActivity
     private final static String KEY_CAR_FOTO    = "CarFoto";        // key for carImage in Adapter
     private final static String CAR_FOTO_DIALOG = "CarFotoInDialog";// key for carImage in Dialog
 
-
-    // ---------- fill collection of cars --------
-    {
-        for(int i = 0 ; i < 67 ; i++)
-        {
-            //arrYears.add(i + 1950);          // Films Years starts from 1950
-        }
-    }
+    private static File ExtStorDir = Environment.getExternalStorageDirectory(); // ---- getting path to ExternalStorageDirectory
+    private static File F = new File(ExtStorDir,"cars.txt");		    		// ---- creating file
 
 
     @Override
@@ -101,102 +92,35 @@ public class MainActivity extends AppCompatActivity
          *      Coping images from Assets to Pictures Directory
          */
         this.putImagesFromAssetsToPictures();
-
         fileNames = PicDir.list();
-        Log.d("======", "Files : " + fileNames.length);
+        /**
+         *      Filling collection carsAL
+         */
+        fillCarsFollection();
+
         for(File f : files)  {carInPicturesDir.add(f);}  // get ArrayList of files in PICTURES Directory
-
-        // Pesochnitsa------------------------------------------------------------------------------
-        //File IntStorDir = this.getFilesDir();
-        //File [] InternalStorFiles = IntStorDir.listFiles();
-        //Toast.makeText(this,l,Toast.LENGTH_SHORT).show();
-        carsAL.add(new Car("Renault",   "Megane",   2007,   fileNames[2]));
-        carsAL.add(new Car("Daewoo",    "Lanos",    2011 ,  fileNames[1]));
-
-        carsAL.add(new Car("VAZ",       "2107",     1998 ,  fileNames[9]));
-        carsAL.add(new Car("Ford",      "Focus",    2008 ,  fileNames[6]));
-        carsAL.add(new Car("ZAZ",       "1102",     2002 ,  fileNames[0]));
 
         /**
          *      writing v Pesochnicu random file
-
-        Log.d("pesochnica", IntStorDir.toString());
-
-
-        try
-        {
-            FileOutputStream FOS = this.openFileOutput("myFile" + ((int) (Math.random() * 100)) + ".txt", Context.MODE_PRIVATE);
-            OutputStreamWriter OSW = new OutputStreamWriter(FOS);
-            for (int i = 0; i < 2; i++)
-            {
-                OSW.write("Hello World" + i + "\n");
-            }
-            OSW.flush();
-            OSW.close();
-        }
-        catch (FileNotFoundException e)     {   e.printStackTrace(); }
-        catch (IOException ie)              {   ie.getMessage(); }
-
-        //-----------------------------------------------------------------
-        // --------- reading from Pesochnica her content ------------------
-        String[] files = this.fileList();
-        for (String f : files)
-        {
-            Log.d("======", "File : " + f);
-        }
-        //-----------------------------------------------------------------
-        // ---------- reading first file from Pesochnica ------------------
-        try {
-            FileInputStream FIS = this.openFileInput(files[0]);
-            LineNumberReader LNR = new LineNumberReader(new InputStreamReader(FIS));
-            while (true)
-            {
-                String S = LNR.readLine();
-                if (S == null)
-                {
-                    break;
-                }
-                Log.d("========>", S);
-            }
-            LNR.close();
-        }
-        catch (Exception e)
-        {
-        }
-        //------------------------------------------------------------------
-        // ---------- deleting all files from Pesochnica -------------------
-
-         for (String f : files) {
-         if (this.deleteFile(f)) {
-         Log.d("====", "File : " + f + " deleted");
-         } else {
-         Log.d("====", "Error deleting file " + f);
-         }
-         }
-         */
-        //End of pesochnitsa -----------------------------------------------------------------------
+         *
+         //Pesochnitsa------------------------------------------------------------------------------
 
 
+         //End of pesochnitsa -----------------------------------------------------------------------
 
-        /**
+         /**
          *      Initializing Vidgets ---------------------------------------------
          */
-        ListOfCars = (ListView)this.findViewById(R.id.lv1);
-        editName   = (EditText)this.findViewById(R.id.etName);
-        editModel  = (EditText)this.findViewById(R.id.etModel);
-        editYear   = (EditText)this.findViewById(R.id.etYear);
-        FotoView   = (ImageView)this.findViewById(R.id.CarImg);
+        this.ListOfCars          = (ListView)this.findViewById(R.id.lv1);
+        this.inflater            = this.getLayoutInflater();
 
-        inflater            = this.getLayoutInflater();
+        this.dialogViewAddUpd    = inflater.inflate(R.layout.actions_layout, null, false);
+        this.biulder             = new AlertDialog.Builder(this);
 
-        dialogViewAddUpd    = inflater.inflate(R.layout.actions_layout, null, false);
-        biulder             = new AlertDialog.Builder(this);
-        //biulder.setView(this.dialogViewAddUpd);
-
-        dialogPictureView   = (LinearLayout)this.dialogViewAddUpd.findViewById(R.id.svImagesDialog);
-        dialogCarName       = (EditText)this.dialogViewAddUpd.findViewById(R.id.etCarNameDialog);
-        dialogCarModel      = (EditText)this.dialogViewAddUpd.findViewById(R.id.etCarModelDialog);
-        dialogCarYear       = (EditText)this.dialogViewAddUpd.findViewById(R.id.etYearDialog);
+        this.dialogPictureView   = (LinearLayout)this.dialogViewAddUpd.findViewById(R.id.svImagesDialog);
+        this.dialogCarName       = (EditText)this.dialogViewAddUpd.findViewById(R.id.etCarNameDialog);
+        this.dialogCarModel      = (EditText)this.dialogViewAddUpd.findViewById(R.id.etCarModelDialog);
+        this.dialogCarYear       = (EditText)this.dialogViewAddUpd.findViewById(R.id.etYearDialog);
 
 
         /**
@@ -239,8 +163,35 @@ public class MainActivity extends AppCompatActivity
         }
 
         myAdapter adapter = new myAdapter(this,R.layout.custom_view,R.id.etName,carMapsAL);
-
         ListOfCars.setAdapter(adapter);
+        ListOfCars.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                //========== DisSelect Proshliy element ==================
+                if (currentCar != -1)
+                {
+                    for (int i = 0; i < allViews.size(); i++)
+                    {
+                        View v = allViews.get(i);
+                        v.setBackgroundColor(Color.rgb(0xB2,0xDA,0x00));
+                    }
+                }
+
+                if (currentCar != position)
+                {
+                    curView = view;
+                    currentCar = position;
+                    tmpCar = carsAL.get(position);
+                    view.setBackgroundColor(Color.CYAN);
+                }
+                else
+                {
+                    MainActivity.currentCar = -1;
+                }
+            }
+        });
     }
 
     @Override
@@ -254,29 +205,18 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item)
     {
         int id = item.getItemId();
-
         switch(id)
         {
-            // ==== A D D ==========================================================================
             case R.id.action_add :
-
                 this.menuAdd();
-
                 return true;
 
-            // ==== U P D A T E ====================================================================
             case R.id.action_upd :
-
                 this.menuUpdate();
-
                 return true;
 
-
-            // ==== D E L E T E ====================================================================
             case R.id.action_del :
-
                 this.menuDelete();
-
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -284,17 +224,12 @@ public class MainActivity extends AppCompatActivity
 
     public void menuAdd()
     {
-
         this.biulder.setView(this.dialogViewAddUpd);
         this.biulder.setTitle("Add Car");
-        /**
-         this.editName.setText("enter Car Name ");
-         this.editModel.setText("enter Car Model");
-         this.editYear.setText("enter Year");
-         */
+        this.dialogCarName.setText("enter Car Name ");
+        this.dialogCarModel.setText("enter Car Model");
+        this.dialogCarYear.setText("enter Year");
         //this.spinnerYear.setAdapter(this.adapterYear);
-        //this.dialogPictureView = (LinearLayout)this.findViewById(R.id.svImagesDialog);
-
         try
         {
             for(File f : files)
@@ -394,10 +329,84 @@ public class MainActivity extends AppCompatActivity
 
         return bmp;
     }
-
-    public void fillCarsFollection()
+    public static String getImage(String fileN)
     {
+        String file = null;
+        Bitmap bmp = null;
+        try
+        {
+            for (File f : files)
+            {
+                if (String.valueOf(f.getName()).compareTo(fileN) == 0)
+                {
+                    FileOutputStream FOS = new FileOutputStream(f);
+                    //bmp = BitmapFactory.decodeStream(FOS);
+                    FOS.close();
+                }
+            }
+        }
+        catch (Exception e)  { System.out.println(e.getMessage()); }
 
+        return file;
     }
 
+    public static void fillCarsFollection()
+    {
+        carsAL.add(new Car("Renault", "Megane",     2007,   fileNames[2]));
+        carsAL.add(new Car("Daewoo",    "Lanos",    2011 ,  fileNames[1]));
+        carsAL.add(new Car("VAZ",       "2107",     1998 ,  fileNames[9]));
+        carsAL.add(new Car("Ford",      "Focus",    2008 ,  fileNames[6]));
+        carsAL.add(new Car("ZAZ",       "1102",     2002 ,  fileNames[0]));
+        carsAL.add(new Car("Hyundai",   "Accent",   1998 ,  fileNames[15]));
+        carsAL.add(new Car("Nissan",    "Maxima",   2008 ,  fileNames[11]));
+        carsAL.add(new Car("Honda",     "Legend",   2002 ,  fileNames[8]));
+    }
+
+    /**
+     *   ----- check for Writing to external storage
+     */
+    private boolean isExstStorageAvailableForWriting()
+    {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    /**
+     *	------ save to File ----------------
+     */
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        try
+        {
+            if(isExstStorageAvailableForWriting())
+            {
+                FileOutputStream    FOS = new FileOutputStream(F);
+                ObjectOutputStream OOS = new ObjectOutputStream(FOS);
+
+                //----- for all Products -------------------------------------
+
+                    for(int j = 0 ; j < carMapsAL.size(); j++)
+                    {
+                        HashMap <String , Object> HashMapCar = carMapsAL.get(j);
+                        String Name  = (String) HashMapCar.get(KEY_CAR_NAME);
+                        String Model = (String) HashMapCar.get(KEY_CAR_MODEL);
+                        String Year = (String) HashMapCar.get(KEY_CAR_YEAR);
+                        //Bitmap imgCar = getFilesDir()Image(HashMapCar.get(KEY_CAR_FOTO));
+
+                        //String FotoCar = (String)
+
+                        //Car toWrite = new Car(Name,Model,Integer.parseInt(Year),FotoCar);
+                        //OOS.writeObject(toWrite);
+                    }
+                OOS.flush();
+                OOS.close();
+            }
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error writing to File : " + e.getMessage());
+        }
+    }
 }

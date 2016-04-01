@@ -47,13 +47,11 @@ class myAdapter extends ArrayAdapter implements Adapter
         }
         if (position != MainActivity.currentCar)
         {
-            v.setBackgroundColor(Color.CYAN);
-            //v.setBackgroundColor(R.color.colorBackground);
+            //v.setBackgroundColor(Color.CYAN);
         }
         else
         {
-            v.setBackgroundColor(Color.GREEN);
-            //v.setBackgroundColor(R.color.colorSelectedItem);
+            //v.setBackgroundColor(Color.GREEN);
         }
         return v;
     }

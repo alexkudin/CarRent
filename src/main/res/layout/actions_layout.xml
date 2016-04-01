@@ -7,101 +7,122 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="Car Name"
-        android:textSize="16dp"
-        android:gravity="center"
-        android:textColor="#00a1a1"
-        android:layout_marginTop="5dp"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:textSize="16dp"
-        android:gravity="center"
-        android:id="@+id/etCarNameDialog"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="Car Model"
-        android:textSize="16dp"
-        android:gravity="center"
-        android:textColor="#00a1a1"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:id="@+id/etCarModelDialog"
-        android:textSize="16dp"
-        android:gravity="center"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="Car Year"
-        android:textSize="16dp"
-        android:gravity="center"
-        android:textColor="#00a1a1"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:id="@+id/etYearDialog"
-        android:gravity="center"
-        android:textColor="#000000"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="Car Foto"
-        android:textSize="16dp"
-        android:gravity="center"
-        android:textColor="#00a1a1"/>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp">
-
-        <LinearLayout
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:text="Car Name : "
+            android:textSize="16dp"
+            android:gravity="left"
+            android:textColor="#00a1a1"/>
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/svImagesDialog"
-            android:layout_gravity="center_horizontal"
-            android:orientation="vertical"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp">
-        </LinearLayout>
-
-    </ScrollView>
+            android:textSize="16dp"
+            android:gravity="center"
+            android:id="@+id/etCarNameDialog"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
-        <Button
-            android:layout_width="50dp"
-            android:layout_weight="1"
-            android:layout_height="50dp"
-            android:text="Ok"
-            android:layout_marginRight="20dp"
-            android:id="@+id/btnOk"
-            android:onClick="clickOk"
-            android:textSize="25dp"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:text="Car Model :"
+            android:textSize="16dp"
+            android:gravity="left"
             android:textColor="#00a1a1"/>
-        <Button
-            android:layout_width="50dp"
-            android:layout_weight="1"
-            android:layout_height="50dp"
-            android:text="Cancel"
-            android:layout_marginLeft="20dp"
-            android:id="@+id/btnCancel"
-            android:onClick="clickCancel"
-            android:textSize="25dp"
-            android:textColor="#a100a1"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/etCarModelDialog"
+            android:textSize="16dp"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:text="Car Year    : "
+            android:textSize="16dp"
+            android:gravity="left"
+            android:textColor="#00a1a1"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/etYearDialog"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:inputType="number"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:text="Car Foto    : "
+            android:textSize="16dp"
+            android:gravity="left"
+            android:textColor="#00a1a1"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/svImagesDialog"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp">
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 
+    <!--
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
+            <Button
+                android:layout_width="50dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:text="Ok"
+                android:layout_marginRight="20dp"
+                android:id="@+id/btnOk"
+                android:onClick="clickOk"
+                android:textSize="25dp"
+                android:textColor="#00a1a1"/>
+            <Button
+                android:layout_width="50dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:text="Cancel"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/btnCancel"
+                android:onClick="clickCancel"
+                android:textSize="25dp"
+                android:textColor="#a100a1"/>
+        </LinearLayout>
+    -->
 </LinearLayout>
